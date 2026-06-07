@@ -1,0 +1,23 @@
+
+> notification_app_fe@0.1.0 dev
+> next dev -p 3002
+
+▲ Next.js 16.2.7 (Turbopack)
+- Local:         http://localhost:3002
+- Network:       http://192.168.56.1:3002
+- Environments: .env.local
+✓ Ready in 804ms
+Creating turbopack project {
+  dir: 'C:\\Users\\santh\\OneDrive\\Desktop\\2023003991\\2023003991\\notification_app_fe',
+  testMode: true
+}
+
+ GET /api/auth 200 in 725ms (next.js: 612ms, application-code: 113ms)
+ GET /api/notifications?page=1&limit=5&notification_type= 200 in 809ms (next.js: 656ms, application-code: 153ms)
+ GET /api/notifications?page=1&limit=2&notification_type= 400 in 93ms (next.js: 4ms, application-code: 89ms)
+ GET /api/notifications?page=1&limit=5&notification_type= 200 in 97ms (next.js: 3ms, application-code: 93ms)
+ GET /api/notifications?page=1&limit=5&notification_type=Event 200 in 81ms (next.js: 3ms, application-code: 78ms)
+ GET / 200 in 3.1s (next.js: 2.7s, application-code: 373ms)
+ GET / 200 in 68ms (next.js: 4ms, application-code: 64ms)
+ GET / 200 in 65ms (next.js: 4ms, application-code: 61ms)
+ GET /priority 200 in 967ms (next.js: 815ms, application-code: 152ms)
