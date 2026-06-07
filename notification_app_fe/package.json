@@ -1,25 +1,26 @@
 {
   "name": "notification_app_fe",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "Campus Notification System - Frontend Application",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^9.0.1",
-    "@mui/material": "^9.0.1",
-    "axios": "^1.17.0",
-    "next": "16.2.7",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "@mui/icons-material": "^5.14.1",
+    "@mui/material": "^5.14.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "axios": "^1.5.0",
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "eslint": "^9",
-    "eslint-config-next": "16.2.7"
+    "eslint": "^8.50.0",
+    "eslint-config-next": "^14.0.0"
   }
 }

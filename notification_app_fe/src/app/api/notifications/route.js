@@ -1,43 +1,66 @@
 import { NextResponse } from "next/server";
-import {
-  API_BASE_URL,
-  externalApiClient,
-  normalizeNotificationResponse,
-} from "@/services/api";
-import { getAccessToken } from "@/services/auth";
+
+const EXTERNAL_API_BASE = "http://4.224.186.213/evaluation-service";
+const API_TOKEN = process.env.NEXT_PUBLIC_TOKEN;
 
 export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-  const params = {
-    page: searchParams.get("page") || "1",
-    limit: searchParams.get("limit") || "100",
-    notification_type: searchParams.get("notification_type") || "",
-  };
-
   try {
-    const accessToken = await getAccessToken();
-    const response = await externalApiClient.get("/notifications", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      params,
+    const { searchParams } = new URL(request.url);
+    const page = searchParams.get("page") || "1";
+    const limit = searchParams.get("limit") || "20";
+    const notificationType = searchParams.get("notification_type") || "";
+
+    const queryParams = new URLSearchParams({
+      page,
+      limit,
     });
 
+    if (notificationType) {
+      queryParams.append("notification_type", notificationType);
+    }
+
+    const externalUrl = `${EXTERNAL_API_BASE}/notifications?${queryParams.toString()}`;
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    if (API_TOKEN) {
+      headers.Authorization = `Bearer ${API_TOKEN}`;
+    }
+
+    const externalResponse = await fetch(externalUrl, {
+      method: "GET",
+      headers,
+      cache: "no-store",
+    });
+
+    if (!externalResponse.ok) {
+      return NextResponse.json(
+        {
+          error: "Failed to fetch notifications from external API",
+          status: externalResponse.status,
+        },
+        { status: externalResponse.status }
+      );
+    }
+
+    const data = await externalResponse.json();
+
+    return NextResponse.json(data, {
+      status: 200,
+      headers: {
+        "Cache-Control": "no-store, max-age=0",
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
     return NextResponse.json(
       {
-        notifications: normalizeNotificationResponse(response.data),
-        source: `${API_BASE_URL}/notifications`,
+        error: "Internal server error",
+        message: error?.message || "Unknown error",
       },
-      { status: 200 }
+      { status: 500 }
     );
-  } catch (error) {
-    const status = error?.response?.status || 502;
-    const message =
-      error?.response?.data?.message ||
-      error?.response?.data?.error ||
-      error?.message ||
-      "Failed to fetch notifications.";
-
-    return NextResponse.json({ message }, { status });
   }
 }
