@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const EXTERNAL_API_BASE = "http://4.224.186.213/evaluation-service";
-const API_TOKEN = process.env.NEXT_PUBLIC_TOKEN;
+const API_TOKEN = process.env.EVALUATION_TOKEN || process.env.EVALUATION_API_TOKEN || process.env.NEXT_PUBLIC_TOKEN;
 
 export async function POST(request) {
   try {

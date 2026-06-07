@@ -13,6 +13,12 @@ function delay(ms) {
   });
 }
 
+const CACHE = {
+  data: null,
+  timestamp: 0,
+  TTL: 5 * 60 * 1000, // 5 minutes
+};
+
 export class NotificationService {
   constructor({ client = apiClient, logger = defaultLogger } = {}) {
     this.client = client;
@@ -23,7 +29,18 @@ export class NotificationService {
     page = 1,
     limit = 100,
     notificationType = "",
+    skipCache = false,
   } = {}) {
+    // Check cache
+    if (!skipCache && CACHE.data && Date.now() - CACHE.timestamp < CACHE.TTL) {
+      await this.logger.info("api_cache_hit", {
+        page,
+        limit,
+        notificationType,
+      });
+      return CACHE.data;
+    }
+
     const params = {
       page,
       limit,
@@ -39,6 +56,12 @@ export class NotificationService {
     try {
       const response = await this.client.get("/notifications", { params });
       const notifications = normalizeNotificationResponse(response.data);
+
+      // Update cache
+      if (page === 1) {
+        CACHE.data = notifications;
+        CACHE.timestamp = Date.now();
+      }
 
       await this.logger.info("api_request_completed", {
         method: "GET",
@@ -120,6 +143,11 @@ export class NotificationService {
       notifications: manager.getTopNotifications(),
       stats: manager.getStats(),
     };
+  }
+
+  clearCache() {
+    CACHE.data = null;
+    CACHE.timestamp = 0;
   }
 }
 

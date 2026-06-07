@@ -1,0 +1,10 @@
+{
+  "servers": [
+    {
+      "name": "github.com/postmanlabs/postman-mcp-server",
+      "type": "http",
+      "url": "https://mcp.postman.com/minimal"
+    }
+  ]
+}
+

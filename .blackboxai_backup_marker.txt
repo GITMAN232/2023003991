@@ -1,0 +1,2 @@
+cBackup marker created at 2026-06-07. Intended for verifying pre-deletion state before any destructive cleanup.
+

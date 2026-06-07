@@ -1,15 +1,13 @@
-"use client";
-
 import { MuiThemeProvider } from "@/app/providers/mui-theme";
 import { AppShell } from "@/components/AppShell";
 import { CssBaseline } from "@mui/material";
 
 export const metadata = {
-  title: "Notification App",
-  description: "Campus Notification System - Stage 1 & 2",
+  title: "Campus Notification System",
+  description: "Notification management platform with priority-based ranking",
   openGraph: {
-    title: "Notification App",
-    description: "Campus Notification System",
+    title: "Campus Notification System",
+    description: "Notification management platform",
   },
 };
 

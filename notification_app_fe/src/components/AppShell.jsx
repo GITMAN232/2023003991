@@ -13,11 +13,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navigationItems = [
-  { href: "/", label: "Home", icon: <HomeIcon fontSize="small" /> },
+  { 
+    href: "/", 
+    label: "Home", 
+    icon: <HomeIcon fontSize="small" />, 
+    ariaLabel: "Home - Dashboard" 
+  },
   {
     href: "/priority",
     label: "Priority",
     icon: <PriorityHighIcon fontSize="small" />,
+    ariaLabel: "Priority - Top 10 Notifications",
   },
 ];
 
@@ -40,31 +46,40 @@ export function AppShell({ children }) {
               fontWeight={700}
               sx={{ flexGrow: 1 }}
             >
-              Notification App
+              Campus Notifications
             </Typography>
-            <Stack direction="row" spacing={1}>
-              {navigationItems.map((item) => {
-                const isActive =
-                  item.href === "/" ? pathname === "/" : pathname === item.href;
+            <nav aria-label="Main navigation">
+              <Stack direction="row" spacing={1}>
+                {navigationItems.map((item) => {
+                  const isActive =
+                    item.href === "/" ? pathname === "/" : pathname === item.href;
 
-                return (
-                  <Button
-                    key={item.href}
-                    LinkComponent={Link}
-                    href={item.href}
-                    startIcon={item.icon}
-                    variant={isActive ? "contained" : "text"}
-                    color={isActive ? "primary" : "inherit"}
-                  >
-                    {item.label}
-                  </Button>
-                );
-              })}
-            </Stack>
+                  return (
+                    <Button
+                      key={item.href}
+                      LinkComponent={Link}
+                      href={item.href}
+                      startIcon={item.icon}
+                      variant={isActive ? "contained" : "text"}
+                      color={isActive ? "primary" : "inherit"}
+                      aria-label={item.ariaLabel}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      {item.label}
+                    </Button>
+                  );
+                })}
+              </Stack>
+            </nav>
           </Toolbar>
         </Container>
       </AppBar>
-      <Container component="main" maxWidth="lg" sx={{ py: { xs: 3, md: 5 } }}>
+      <Container
+        component="main"
+        maxWidth="lg"
+        sx={{ py: { xs: 3, md: 5 } }}
+        role="main"
+      >
         {children}
       </Container>
     </Box>

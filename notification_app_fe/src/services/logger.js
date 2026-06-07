@@ -22,21 +22,30 @@ export class StructuredLogger {
 
     try {
       await this.transport(logEntry);
-    } catch {
-      // Logging middleware must not break the user-facing notification flow.
+    } catch (error) {
+      // Non-blocking logging error: only log to console in development
+      if (process.env.NODE_ENV === "development") {
+        console.debug("Logger transport error:", error);
+      }
+      // Logging middleware must not break the user-facing notification flow
     }
   }
 
   info(event, details = {}) {
-    return this.log("info", event, details);
+    // Fire-and-forget to prevent blocking UI
+    return this.log("info", event, details).catch(() => {});
   }
 
   warn(event, details = {}) {
-    return this.log("warn", event, details);
+    return this.log("warn", event, details).catch(() => {});
   }
 
   error(event, details = {}) {
-    return this.log("error", event, details);
+    return this.log("error", event, details).catch(() => {});
+  }
+
+  debug(event, details = {}) {
+    return this.log("debug", event, details).catch(() => {});
   }
 }
 

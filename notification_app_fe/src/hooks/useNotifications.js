@@ -27,7 +27,7 @@ export function useNotifications({
   notificationType = "",
 } = {}) {
   const serviceRef = useRef(new NotificationService({ logger }));
-  const managerRef = useRef();
+  const managerRef = useRef(null);
   const managerKeyRef = useRef("");
   const [notifications, setNotifications] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,6 +56,10 @@ export function useNotifications({
       setError("");
 
       try {
+        if (!managerRef.current) {
+          throw new Error("Manager not initialized");
+        }
+
         const result = await serviceRef.current.getTopUnreadNotifications({
           page,
           limit,
@@ -65,14 +69,20 @@ export function useNotifications({
         });
 
         if (!isActive) return;
-        setNotifications(result.notifications);
-        setStats(result.stats);
+        setNotifications(result?.notifications || []);
+        setStats(result?.stats || {});
       } catch (loadError) {
         if (!isActive) return;
 
         setNotifications([]);
         setStats({});
         setError(toErrorMessage(loadError));
+
+        // Log error for debugging
+        logger.error("Failed to load notifications", {
+          error: loadError.message,
+          stack: loadError.stack,
+        });
       } finally {
         if (isActive) {
           setIsLoading(false);

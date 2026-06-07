@@ -1,71 +1,121 @@
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import { getNotificationType } from "@/app/utils/notification-types";
-import { formatNotificationTimestamp } from "@/app/utils/time-format";
+"use client";
 
-function getTitle(notification) {
-  return (
-    notification?.title ||
-    notification?.Title ||
-    notification?.subject ||
-    notification?.heading ||
-    notification?.notification_title ||
-    "Notification"
-  );
-}
+import {
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  Box,
+  Button
+} from "@mui/material";
 
-function getMessage(notification) {
-  return (
-    notification?.message ||
-    notification?.Message ||
-    notification?.description ||
-    notification?.body ||
-    notification?.content ||
-    "No message provided."
-  );
-}
+export default function NotificationCard({
+  item,
+  viewed,
+  notification,
+  onAcknowledge
+}) {
+  const displayItem = item || notification;
+  if (!displayItem) return null;
 
-function getTimestamp(notification) {
-  return (
-    notification?.timestamp ||
-    notification?.Timestamp ||
-    notification?.created_at ||
-    notification?.createdAt ||
-    notification?.date
-  );
-}
+  const id = displayItem.ID || displayItem.id;
+  const type = displayItem.Type || displayItem.type || displayItem.notification_type || "Notification";
+  const message = displayItem.Message || displayItem.message || "No message content";
+  const timestamp = displayItem.Timestamp || displayItem.timestamp || "";
 
-export function NotificationCard({ notification }) {
-  const type = getNotificationType(notification);
+  const isViewed = viewed !== undefined ? viewed : false;
 
   return (
-    <Card>
-      <CardContent>
-        <Stack spacing={1.5}>
-          <Stack
-            direction={{ xs: "column", sm: "row" }}
-            spacing={1.5}
-            sx={{ justifyContent: "space-between" }}
+    <Card
+      sx={{
+        mb: 2,
+        borderRadius: "12px",
+        border: "1px solid #e2e8f0",
+        borderLeft: isViewed ? "1px solid #e2e8f0" : "5px solid #2952cc",
+        boxShadow: isViewed ? "none" : "0 4px 12px rgba(41, 82, 204, 0.06)",
+        transition: "all 0.2s ease",
+        backgroundColor: "#ffffff",
+        overflow: "hidden"
+      }}
+    >
+      <CardContent sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 2, p: "24px !important" }}>
+        <Box sx={{ flex: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+            <Typography
+              variant="caption"
+              sx={{
+                fontWeight: 700,
+                color: "#64748b",
+                letterSpacing: "0.05em",
+                textTransform: "uppercase"
+              }}
+            >
+              {type}
+            </Typography>
+            {!isViewed && (
+              <Chip
+                label="NEW"
+                color="primary"
+                size="small"
+                sx={{
+                  fontSize: "0.65rem",
+                  fontWeight: 850,
+                  height: "20px",
+                  borderRadius: "4px",
+                  backgroundColor: "#2952cc",
+                  color: "#ffffff"
+                }}
+              />
+            )}
+          </Box>
+
+          <Typography
+            sx={{
+              color: isViewed ? "#64748b" : "#1e293b",
+              fontSize: "1rem",
+              fontWeight: isViewed ? 400 : 500,
+              lineHeight: 1.5,
+              margin: 0
+            }}
           >
-            <Typography component="h2" variant="h6" fontWeight={700}>
-              {getTitle(notification)}
-            </Typography>
-            <Chip label={type} size="small" color="primary" />
-          </Stack>
-          <Typography color="text.secondary">
-            {getMessage(notification)}
+            {message}
           </Typography>
-          <Stack direction="row" spacing={1} sx={{ alignItems: "center" }}>
-            <AccessTimeIcon color="action" fontSize="small" />
-            <Typography color="text.secondary" variant="body2">
-              {formatNotificationTimestamp(getTimestamp(notification))}
-            </Typography>
-          </Stack>
-        </Stack>
+
+          <Typography
+            variant="body2"
+            sx={{
+              color: "#94a3b8",
+              display: "block",
+              mt: "8px",
+              fontSize: "0.8rem"
+            }}
+          >
+            {timestamp}
+          </Typography>
+        </Box>
+
+        {!isViewed && onAcknowledge && (
+          <Button
+            variant="outlined"
+            onClick={onAcknowledge}
+            sx={{
+              borderColor: "#2952cc",
+              color: "#2952cc",
+              fontWeight: 600,
+              fontSize: "0.85rem",
+              textTransform: "none",
+              borderRadius: "6px",
+              px: 2,
+              py: 1,
+              "&:hover": {
+                backgroundColor: "#eff6ff",
+                borderColor: "#2952cc"
+              }
+            }}
+          >
+            Acknowledge
+          </Button>
+        )}
       </CardContent>
     </Card>
   );
