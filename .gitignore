@@ -84,3 +84,8 @@ out/
 *.swp
 *.swo
 *~
+
+# Project runtime logs
+logs/
+**/logs/
+

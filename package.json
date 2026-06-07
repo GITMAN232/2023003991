@@ -1,0 +1,13 @@
+{
+  "name": "campus-notification-system-root",
+  "version": "1.0.0",
+  "description": "Root orchestrator for Campus Notification System services",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix logging_middleware && npm install --prefix notification_app_be && npm install --prefix notification_app_fe",
+    "dev:log": "npm run dev --prefix logging_middleware",
+    "dev:be": "npm run dev --prefix notification_app_be",
+    "dev:fe": "npm run dev --prefix notification_app_fe",
+    "dev": "npx concurrently -k -p \"[{name}]\" -n \"logging,backend,frontend\" -c \"cyan,magenta,green\" \"npm run dev:log\" \"npm run dev:be\" \"npm run dev:fe\""
+  }
+}
